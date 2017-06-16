@@ -26,11 +26,6 @@ namespace PTools
 {
     public static class PDF
     {
-        /// <summary>
-        /// Рисует один штрихкод в файле PDF на определенной странице
-        /// </summary>
-        /// <param name="x">для ГИБДД кемерова значение по умолчанию 380</param>
-        /// <param name="y">для ГИБДД кемерова значение по умолчанию 685</param>
         public static void AddBarcode(string file, int page, string barcode, int x, int y, bool replaceSource)
         {
             try
@@ -69,15 +64,7 @@ namespace PTools
                 MessageBox.Show(ex.Message, "Error in PTools.dll", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        /// <summary>
-        /// Рисует один штрихкод в файле PDF на определенной странице
-        /// </summary>
-        /// <param name="x">для ГИБДД кемерова значение по умолчанию 380</param>
-        /// <param name="y">для ГИБДД кемерова значение по умолчанию 685</param>
-        /// <param name="step">Шаг вставки штрихкода. Так, если step = 1, то штрихкод быдет на каждой странице, step = 2 - через одну и.т.д.</param>
-        /// <param name="y">для ГИБДД кемерова значение по умолчанию 685</param>
-        /// <param name="barcodeList">Список штрихкодов</param>
+        
         public static void AddBarcodeSeqence(string file, int step, List<string> barcodeList, int x, int y, bool replaceSource)
         {
             using (var ms = new MemoryStream())
@@ -120,16 +107,6 @@ namespace PTools
             }
         }
 
-        /// <summary>
-        /// Insert single addressee block in PDF file
-        /// </summary>
-        /// <param name="file">input file</param>
-        /// <param name="beforePage">block will be inserted before this page</param>
-        /// <param name="doublesided">if true, blanc page will be added after addressee block</param>
-        /// <param name="person">Addressee data</param>
-        /// <param name="x">lower left corner x coordinate</param>
-        /// <param name="y">lower left corner y coordinate</param>
-        /// <param name="replaceSource">Replace original file by result</param>
         public static void AddAddresseBlock(string file, int beforePage, bool doublesided, Addressee person, int x, int y, bool replaceSource)
         {
             using (var ms = new MemoryStream())
@@ -264,7 +241,6 @@ namespace PTools
                             cb.AddTemplate(writer.GetImportedPage(reader, i), 0, 0);
                             doc.NewPage();
                         }
-                        //if (n == roll.Count - 1) break;
                         n++;
                     }
                 }
@@ -299,18 +275,7 @@ namespace PTools
                             for (int j = 0; j < step; j++)
                             {
                                 var strategy = new iTextSharp.text.pdf.parser.SimpleTextExtractionStrategy();
-                                //var parsedText = string.Join("", iTextSharp.text.pdf.parser.PdfTextExtractor.GetTextFromPage(reader, i + j).Split(default(string[]), StringSplitOptions.RemoveEmptyEntries));
                                 var parsedText = iTextSharp.text.pdf.parser.PdfTextExtractor.GetTextFromPage(reader, i + j);
-
-                                //var index = parsedText.IndexOf("999999");
-                                //if (index >= 0) barcode = parsedText.Substring(index, 14);
-                                //int index = 0;
-                                //do
-                                //{
-                                //    index = parsedText.IndexOf("№ ", index + 2);
-                                //    if (index >= 0) barcode = parsedText.Substring(index + 1, 20).Trim();
-                                //    if (Regex.IsMatch(barcode, "^[0-9]{1,20}$")) matches.Add(barcode);
-                                //} while (index != -1);
                                 Match firstPageMatches;
                                 MatchCollection secondPageMatch;
                                 if (j == 1)
@@ -333,7 +298,6 @@ namespace PTools
 
                                 copy.AddPage(copy.GetImportedPage(reader, i + j));
                             }
-                            //if (barcode == string.Empty) throw new Exception($"Не найден штрихкод около страницы {i}.");
                             if (matches.Count < 2) throw new Exception($"В {Path.GetFileName(file)} около страницы {i} не найден один из штрихкодов.");
                             if (!matches.GetRange(1, matches.Count-1).Contains(matches.First()))
                             {
@@ -355,6 +319,3 @@ namespace PTools
         }
     }
 }
-
-
-//380, 685
